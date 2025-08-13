@@ -43,12 +43,12 @@ index = pc.Index(PINECONE_INDEX_NAME)
 # load,split,embed and upsert pdf docs content
 
 def load_vectorstore(uploadedfiles):
-    embed_model = GoogleGenerativeAIEmbeddings(model="models/embedding-003")
+    embed_model = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
     file_path=[]
 
     # 1. upload 
     for file in uploadedfiles:
-        save_path=Path(UPLOAD_DIR)/file.file_name
+        save_path=Path(UPLOAD_DIR)/file.filename
         with open(save_path, "wb") as f:
             f.write(file.file.read())
 
@@ -64,7 +64,8 @@ def load_vectorstore(uploadedfiles):
         chunks=splitter.split_documents(documents)
 
         text = [chunk.page_content for chunk in chunks]
-        metadata = [chunk.metadata for chunk in chunks]
+        # metadata = [chunk.metadata for chunk in chunks]
+        metadata = [{"text": chunk.page_content, **chunk.metadata} for chunk in chunks]
         ids = [f"{Path(file).stem}--{i}" for i in range(len(chunks))]
 
         # 3. Embedding
