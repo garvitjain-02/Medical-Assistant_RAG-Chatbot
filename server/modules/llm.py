@@ -12,8 +12,7 @@ def get_llm_chain(retriever):
     llm = ChatGroq(
         api_key=GROQ_API_KEY,
         model="llama3-70b-8192"        
-    )
-    
+    )    
     prompt = PromptTemplate(
         input_variables=["context", "question"],
         template="""
