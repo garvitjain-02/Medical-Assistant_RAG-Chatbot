@@ -1,5 +1,5 @@
-from langchain.prompts  import PromptTemplate
-from langchain.chains import retrieval_qa
+from langchain.prompts import PromptTemplate
+from langchain.chains import RetrievalQA
 from langchain_groq import ChatGroq
 import os
 from dotenv import load_dotenv
@@ -9,10 +9,11 @@ GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 PINECONE_API_KEY = os.getenv("PINECONE_API_KEY")
 
 def get_llm_chain(retriever):
-    llm=ChatGroq(
+    llm = ChatGroq(
         api_key=GROQ_API_KEY,
         model="llama3-70b-8192"        
     )
+    
     prompt = PromptTemplate(
         input_variables=["context", "question"],
         template="""
@@ -39,7 +40,7 @@ def get_llm_chain(retriever):
         """
     )
 
-    return retrieval_qa.from_chain_type(
+    return RetrievalQA.from_chain_type(
         llm=llm,
         chain_type="stuff",
         retriever=retriever,
